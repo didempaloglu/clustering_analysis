@@ -1,3 +1,5 @@
+# installing and loading requaired packages
+
 install.packages("cluster")
 install.packages("factoextra")
 install.packages("tidyverse")  #data manipulation
@@ -7,40 +9,63 @@ library(factoextra)
 library(tidyverse)  
 library(dendextend)
 
+# setting up working directory and uploading data
 
 setwd("C:\\Users\\user\\Desktop") #seting up the wd
 mydata <- read.csv("TÜİK-Raw Data.csv",sep=";", header=T)
 mydata.use <- mydata[,-1]  #The province names will not be useful in cluster analysis, so it have been removed and new dataset will be used in following steps
 
-# explore the data
-plot(mydata.use)
-head(mydata)
-colnames(mydata)
-sum(is.na(mydata))
-summary(mydata.use) 
+
+# exploring the data
+
+plot(mydata.use) #visualize the data
+head(mydata) #see the first rows
+colnames(mydata) # what are the columns
+sum(is.na(mydata)) #is there any missing
+summary(mydata.use) #summary of data
 
 
 # scale the data
+# Data must be scaled. This makes the variables comparable with all 0 mean and 1 standard deviation
 means <- apply(mydata.use,2,mean) #computes means of each column
 std <- apply(mydata.use,2,sd) #computes standard deviations of each column
 mydata.use <- scale(mydata.use,center=means,scale=std) #standardization
 head(mydata.use)
 
-# PAM Algorithm
+# PAM (k-medoids) Algorithm
 
+# It is more robust than k-means because k-means is easily affected from outliers, 
+# PAM is not sensitive to outliers and noises. In PAM algorithm, the specified observations (medoids) are selected as centers
+
+# the optimal number of clusters 
 fviz_nbclust(mydata.use, pam, method = "silhouette") + theme_classic()
-mydata.pam = pam(mydata.dist,3)
+
+# summary of clustering algorithm
+mydata.pam <- pam(mydata.dist,3)
 print(mydata.pam)
 
-
+# plotting the clustering results
 pam.res <- eclust(mydata.use, "pam", k = 3, graph = FALSE)
 fviz_cluster(pam.res, geom = "point", ellipse.type = "norm", ggtheme = theme_minimal())
 
+# checking the clustering tendency of the data
+# Hopkin Statistics measures how well the data can be clustered. H0: The data is uniformly distributed (i.e. there is no meaningful clustering)
 
-hopkins(mydata.use, n=nrow(mydata.use)-1) 
+hopkins(mydata.use, n=nrow(mydata.use)-1) # first way to calculate hopkin
 res <- get_clust_tendency(mydata.use, n = nrow(mydata.use)-1, graph = FALSE) #another way to get the same result using by different code
+
+# 1 – H has been used as Hopkin statistics and it is equal to approximately 0.92. 
+# So, it can be said that the null hypothesis is rejected and the data has some meaningful clusters
+
 res$hopkins_stat
+
+# checking silhouette value
+# It is a measure of how similar an object is to its own cluster and how far it is to other clusters. 
+# It takes values between -1 and 1. If it is close to 1, it means that the observations in a cluster is well fitted
+
 fviz_silhouette(mydata.pam)
+
+###################################################
 
 # Hierarchical Clustering
 
@@ -48,11 +73,17 @@ mydata.dist <- dist(mydata.use) #distance matrix
 mydata.hclust <- hclust(mydata.dist, method= "ward.D2") #ward has been selected as linkage method 
 plot(mydata.hclust,labels= mydata$Province,main='Hclust Dendrogram')  #simple plotting dendrogram
 
+# visualization method for showing dendrogram 
 fviz_dend(mydata.hclust, k = 6, # Cut in six groups
           cex = 0.3, #label size
           horiz=TRUE,
           color_labels_by_k = TRUE,
           , rect=TRUE, rect_border="jco", rect_fill = TRUE, show_labels = TRUE)
+
+# “ward.D2” have been used as linkage method in this clustering. 
+# This method is used because the data set has some outlier observations.
+# The below codes compare different linkage methods. The highest score implies the more reliable method. 
+# It can be understood that ward is most suitable method for linkage as highlighted
 
 m <- c( "average", "single", "complete", "ward")
 names(m) <- c( "average", "single", "complete", "ward")
@@ -61,10 +92,7 @@ ac <- function(x) {
  + }
 map_dbl(m, ac)
 
+# Showing which province is in which clusters
+
 groups.6 = cutree(mydata.hclust,6)
 sapply(unique(groups.6),function(g)mydata$Province[groups.6 == g])
-
-
-
-
-
