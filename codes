@@ -12,4 +12,59 @@ setwd("C:\\Users\\user\\Desktop") #seting up the wd
 mydata <- read.csv("TÜİK-Raw Data.csv",sep=";", header=T)
 mydata.use <- mydata[,-1]  #The province names will not be useful in cluster analysis, so it have been removed and new dataset will be used in following steps
 
+# explore the data
 plot(mydata.use)
+head(mydata)
+colnames(mydata)
+sum(is.na(mydata))
+summary(mydata.use) 
+
+
+# scale the data
+means <- apply(mydata.use,2,mean) #computes means of each column
+std <- apply(mydata.use,2,sd) #computes standard deviations of each column
+mydata.use <- scale(mydata.use,center=means,scale=std) #standardization
+head(mydata.use)
+
+# PAM Algorithm
+
+fviz_nbclust(mydata.use, pam, method = "silhouette") + theme_classic()
+mydata.pam = pam(mydata.dist,3)
+print(mydata.pam)
+
+
+pam.res <- eclust(mydata.use, "pam", k = 3, graph = FALSE)
+fviz_cluster(pam.res, geom = "point", ellipse.type = "norm", ggtheme = theme_minimal())
+
+
+hopkins(mydata.use, n=nrow(mydata.use)-1) 
+res <- get_clust_tendency(mydata.use, n = nrow(mydata.use)-1, graph = FALSE) #another way to get the same result using by different code
+res$hopkins_stat
+fviz_silhouette(mydata.pam)
+
+# Hierarchical Clustering
+
+mydata.dist <- dist(mydata.use) #distance matrix
+mydata.hclust <- hclust(mydata.dist, method= "ward.D2") #ward has been selected as linkage method 
+plot(mydata.hclust,labels= mydata$Province,main='Hclust Dendrogram')  #simple plotting dendrogram
+
+fviz_dend(mydata.hclust, k = 6, # Cut in six groups
+          cex = 0.3, #label size
+          horiz=TRUE,
+          color_labels_by_k = TRUE,
+          , rect=TRUE, rect_border="jco", rect_fill = TRUE, show_labels = TRUE)
+
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+ac <- function(x) {
+ + agnes(mydata.use, method = x)$ac
+ + }
+map_dbl(m, ac)
+
+groups.6 = cutree(mydata.hclust,6)
+sapply(unique(groups.6),function(g)mydata$Province[groups.6 == g])
+
+
+
+
+
