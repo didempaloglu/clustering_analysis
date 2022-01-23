@@ -1,0 +1,15 @@
+install.packages("cluster")
+install.packages("factoextra")
+install.packages("tidyverse")  #data manipulation
+install.packages("dendextend") #for comparing two dendrograms
+library(cluster)
+library(factoextra)
+library(tidyverse)  
+library(dendextend)
+
+
+setwd("C:\\Users\\user\\Desktop") #seting up the wd
+mydata <- read.csv("TÜİK-Raw Data.csv",sep=";", header=T)
+mydata.use <- mydata[,-1]  #The province names will not be useful in cluster analysis, so it have been removed and new dataset will be used in following steps
+
+plot(mydata.use)
