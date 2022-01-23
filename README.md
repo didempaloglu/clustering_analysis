@@ -5,14 +5,14 @@ The main goal of this project is to see how provinces of Turkey is clustered acc
 
   ### Background Information About Dataset
   
-The data set includes economic indicators for each province in Turkey. The indicators have been taken from Turkish Statistical Institute. The data is from year 2018 . All variables in this data set are numerical. It should be noted that İstanbul has the highest scores in total. Because it has a very special economic and geographic situation and therefore it creates its own cluster in all clustering algorithms. The set of variables are as below: 
-  -- Province:	The Name of the Province
-  -- GDP:	GDP (Thousand $)
-  -- Population:	Total Population
-  -- Export:	Total Export (Thousand $)
-  -- Agriculture:	Total Cultivated Agricultural Area (Hectares)
-  -- Overnights:	Number of Arrivals and Overnight Stays in Accommodation Facilities with Tourism Operation Certificate: Number of Overnight Stays / Total
-  -- Net.Migration: Net Migration of the Province
-  -- Cars: Number of Automobiles per Thousand People
-  -- Education:	Population by Educational Level (15 Years and Older), Graduates of College or Faculty / Total
+The data set includes economic indicators for each province in Turkey. The indicators have been taken from Turkish Statistical Institute. The data is from year 2018 . All variables in this data set are numerical. It should be noted that İstanbul has the highest scores in total. Because it has a very special economic and geographic situation and therefore it creates its own cluster in all clustering algorithms. The set of variables are as below: <br />
+  -- Province:	The Name of the Province<br />
+  -- GDP:	GDP (Thousand $)<br />
+  -- Population:	Total Population<br />
+  -- Export:	Total Export (Thousand $)<br />
+  -- Agriculture:	Total Cultivated Agricultural Area (Hectares)<br />
+  -- Overnights:	Number of Arrivals and Overnight Stays in Accommodation Facilities with Tourism Operation Certificate: Number of Overnight Stays / Total<br />
+  -- Net.Migration: Net Migration of the Province<br />
+  -- Cars: Number of Automobiles per Thousand People<br />
+  -- Education:	Population by Educational Level (15 Years and Older), Graduates of College or Faculty / Total<br />
   -- Unemployment:	Unemployment Rate (%)
